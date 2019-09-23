@@ -2,7 +2,7 @@
     angular
         .module('catalogManager')
         .component('catalogManager', {
-            templateUrl: 'app/mainApp/components/catalogManager/catalogManager.tmpl.html',
+            templateUrl: './catalogManager.tmpl.html',
             controller: CatalogManagerController,
             bindings: {
                 url: '<', //Full URL without parameters
@@ -486,7 +486,7 @@
                 $mdDialog.show({
                     controller: 'CatalogCreateDialogController',
                     controllerAs: 'vm',
-                    templateUrl: 'app/mainApp/components/catalogManager/dialogs/createDialog/createDialog.tmpl.html',
+                    templateUrl: './dialogs/createDialog/createDialog.tmpl.html',
                     fullscreen: true,
                     clickOutsideToClose: true,
                     focusOnOpen: true,
@@ -524,7 +524,7 @@
                 $mdDialog.show({
                     controller: 'CatalogDeleteDialogController',
                     controllerAs: 'vm',
-                    templateUrl: 'app/mainApp/components/catalogManager/dialogs/deleteDialog/deleteDialog.tmpl.html',
+                    templateUrl: './dialogs/deleteDialog/deleteDialog.tmpl.html',
                     fullscreen: true,
                     clickOutsideToClose: true,
                     focusOnOpen: true,
@@ -565,7 +565,7 @@
                 $mdDialog.show({
                     controller: 'CatalogModifyDialogController',
                     controllerAs: 'vm',
-                    templateUrl: 'app/mainApp/components/catalogManager/dialogs/modifyDialog/modifyDialog.tmpl.html',
+                    templateUrl: './dialogs/modifyDialog/modifyDialog.tmpl.html',
                     fullscreen: true,
                     clickOutsideToClose: true,
                     focusOnOpen: true,
@@ -610,7 +610,7 @@
                 $mdDialog.show({
                     controller: 'CatalogUpdateDialogController',
                     controllerAs: 'vm',
-                    templateUrl: 'app/mainApp/components/catalogManager/dialogs/patchDialog/patchDialog.tmpl.html',
+                    templateUrl: './dialogs/patchDialog/patchDialog.tmpl.html',
                     fullscreen: true,
                     clickOutsideToClose: true,
                     focusOnOpen: true,
@@ -655,7 +655,7 @@
                 $mdDialog.show({
                     controller: 'CatalogSearchDialogController',
                     controllerAs: 'vm',
-                    templateUrl: 'app/mainApp/components/catalogManager/dialogs/searchDialog/searchDialog.tmpl.html',
+                    templateUrl: './dialogs/searchDialog/searchDialog.tmpl.html',
                     fullscreen: true,
                     clickOutsideToClose: true,
                     focusOnOpen: true,

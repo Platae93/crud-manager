@@ -2,7 +2,7 @@
     angular
         .module('catalogManager')
         .component('catalogObjectModify', {
-            templateUrl: 'app/mainApp/components/catalogManager/components/catalogObjectModify.tmpl.html',
+            templateUrl: './catalogObjectModify.tmpl.html',
             controller: CatalogObjectModifyController,
             controllerAs: 'vm',
             bindings: {

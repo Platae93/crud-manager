@@ -2,7 +2,7 @@
     angular
         .module('catalogManager')
         .component('catalogObjectCreate', {
-            templateUrl: 'app/mainApp/components/catalogManager/components/catalogObjectCreate.tmpl.html',
+            templateUrl: './catalogObjectCreate.tmpl.html',
             controller: CatalogObjectCreateController,
             controllerAs: 'vm',
             bindings: {

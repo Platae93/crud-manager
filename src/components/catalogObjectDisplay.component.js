@@ -2,7 +2,7 @@
     angular
         .module('catalogManager')
         .component('catalogObjectDisplay', {
-            templateUrl: 'app/mainApp/components/catalogManager/components/catalogObjectDisplay.tmpl.html',
+            templateUrl: './catalogObjectDisplay.tmpl.html',
             controller: CatalogObjectDisplay,
             bindings: {
                 element: '<',
