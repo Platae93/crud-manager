@@ -1,0 +1,40 @@
+<div layout="column"
+     cg-busy="{promise:vm.createLoader, message:vm.dialog.loading, templateUrl:'app/mainApp/directives/loading.tmpl.html'}">
+    <md-toolbar layout="row"
+                layout-align="space-between center">
+        <div layout-padding ng-if="vm.dialog.title" class="md-title">{{vm.dialog.title}}</div>
+        <div layout-padding ng-if="!vm.dialog.title" class="md-title">Create element</div>
+        <md-button class="md-icon-button"
+                   ng-click="vm.cancel()"
+                   aria-label="exit dialog">
+            <md-icon md-font-icon="zmdi zmdi-close"></md-icon>
+        </md-button>
+    </md-toolbar>
+
+    <form name="createDialogForm">
+        <catalog-object-create element="vm.objectToCreate"
+                               fields="vm.fields"></catalog-object-create>
+    </form>
+    <md-actions layout="row"
+                layout-align="space-between center">
+        <md-button ng-click="vm.cancel()"
+                   aria-label="{{vm.dialog.cancelButton}}"
+                   class="md-warn md-raised">
+            <div layout="row" layout-align="center center">
+                <md-icon md-font-icon="fas fa-ban"></md-icon>
+                <div ng-if="vm.dialog.cancelButton" hide-xs hide-sm>{{vm.dialog.cancelButton}}</div>
+                <div ng-if="!vm.dialog.cancelButton" hide-xs hide-sm>Cancel</div>
+            </div>
+        </md-button>
+        <md-button ng-click="vm.create(vm.objectToCreate)"
+                   ng-disabled="createDialogForm.$invalid"
+                   aria-label="{{vm.dialog.okButton}}"
+                   class="md-primary md-raised">
+            <div layout="row" layout-align="center center">
+                <md-icon md-font-icon="fa fa-save"></md-icon>
+                <div ng-if="vm.dialog.okButton" hide-xs hide-sm>{{vm.dialog.okButton}}</div>
+                <div ng-if="!vm.dialog.okButton" hide-xs hide-sm>Ok</div>
+            </div>
+        </md-button>
+    </md-actions>
+</div>

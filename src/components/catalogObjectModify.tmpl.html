@@ -1,0 +1,246 @@
+<md-content layout="column"
+            layout-padding
+            layout-align="center stretch">
+    <form name="modifyForm">
+        <div layout="column"
+             layout-align="center stretch"
+             ng-repeat="field in vm.fields">
+            <section ng-if="field['type']!=='fileUploader'
+                         && field['type']!=='catalog'
+                         && field['type']!=='options'
+                         && field['type']!=='color'
+                         && field['type']!=='array'
+                         && field['type']!=='catalog_array'
+                         && field['type']!=='object'
+                         && field['type']!=='boolean'
+                         && field['type']!=='array_object'">
+                <md-input-container layout="column" class="md-block">
+                    <!--Field label selection depending on the parameters given-->
+                    <label ng-if="field['label']">{{field['label']}}</label>
+                    <label ng-if="!field['label']">{{field['model']}}</label>
+                    <input ng-required="field.required"
+                           aria-label="{{field['model']}}"
+                           type="{{field.type}}"
+                           name="{{field.model}}"
+                           min="{{field.min}}"
+                           max="{{field.max}}"
+                           ng-disabled="field.lock"
+                           ng-pattern="field['validations'].regex"
+                           ng-model="vm.objectToModify[field.model]" />
+                    <div ng-messages="modifyForm[field.model].$error">
+                        <div ng-message="required">{{field.validations.errors.required}}</div>
+                        <div ng-message="pattern">{{field.validations.errors.regex}}</div>
+                    </div>
+                    <div ng-if="field.hint"
+                         class="hint">
+                        {{field.hint}}
+                    </div>
+                </md-input-container>
+            </section>
+            <section ng-if="field['type']==='boolean'">
+                <md-input-container class="md-block">
+                    <md-switch ng-model="vm.objectToModify[field.model]">
+                        <div ng-if="field['label']">{{field.label}}</div>
+                        <div ng-if="!field['label']">{{field.model}}</div>
+                    </md-switch>
+                </md-input-container>
+            </section>
+            <section ng-if="field['type']==='color'">
+                <md-input-container class="md-block">
+                    <!--Field label selection depending on the parameters given-->
+                    <label ng-if="field['label']">{{field['label']}}</label>
+                    <label ng-if="!field['label']">{{field['model']}}</label>
+                    <input ng-required="field.required"
+                           ng-disabled="field.lock"
+                           aria-label="{{field['model']}}"
+                           type="color"
+                           name="{{field.model}}"
+                           ng-model="vm.objectToModify[field.model]"
+                           value="{{vm.objectToModify[field.model]}}" />
+                    <div ng-messages="modifyForm[field.model].$error">
+                        <div ng-message="required">{{field.validations.errors.required}}</div>
+                        <div ng-message="pattern">{{field.validations.errors.regex}}</div>
+                    </div>
+                    <div ng-if="field.hint"
+                         class="hint">
+                        {{field.hint}}
+                    </div>
+                </md-input-container>
+            </section>
+            <section ng-if="field['type']==='fileUploader'"
+                     layout="column">
+                <!--Field label selection depending on the parameters given-->
+                <label ng-if="field['label']">{{field['label']}}</label>
+                <label ng-if="!field['label']">{{field['model']}}</label>
+                <file-uploader file-formats="field['validations'].fileUploader.fileFormats"
+                               capture="field['validations'].fileUploader.capture"
+                               validations="field['validations'].fileUploader.validations"
+                               resize="field['validations'].fileUploader.resize"
+                               resize-if="field['validations'].fileUploader.resizeIf"
+                               max-dimensions="field['validations'].fileUploader.maxDimensions"
+                               multiple-files="field['validations'].fileUploader.multipleFiles"
+                               allow-folders="field['validations'].fileUploader.allowFolders"
+                               max-files="field['validations'].fileUploader.maxfiles"
+                               keep="field['validations'].fileUploader.keep"
+                               files-selected="vm.filesSelected(files, field)">
+                </file-uploader>
+            </section>
+            <section ng-if="field['type']==='options'">
+                <md-input-container class="md-block">
+                    <!--Field label selection depending on the parameters given-->
+                    <label ng-if="field['label']">{{field['label']}}</label>
+                    <label ng-if="!field['label']">{{field['model']}}</label>
+                    <md-select ng-model="vm.objectToModify[field.model]"
+                               ng-required="field.required"
+                               ng-disabled="field.lock">
+                        <md-option ng-repeat="option in field.options.elements"
+                                   ng-value="option[field.options.model]">
+                            <section ng-if="!field.options.showModel">
+                                <section ng-if="field.option">
+                                    {{option[field.options.option]}}
+                                </section>
+                                <section ng-if="!field.option">
+                                    {{option[field.options.model]}}
+                                </section>
+                            </section>
+                            <section ng-if="field.options.showModel">
+                                <b>{{option[field.options.model]}}</b> - {{option[field.options.option]}}
+                            </section>
+                        </md-option>
+                    </md-select>
+                    <div ng-if="field.hint"
+                         class="hint">
+                        {{field.hint}}
+                    </div>
+                </md-input-container>
+            </section>
+            <section ng-if="field['type']==='catalog'">
+                <section ng-if="field['catalog'].requires">
+                    <catalog-select ng-if="vm.objectToModify[field['catalog'].requires]"
+                                    lock="field.lock"
+                                    hint="field.hint"
+                                    required="field.required"
+                                    catalog="field.catalog"
+                                    lazy="field.catalog.requires"
+                                    initial="vm.objectToModify[field.model]"
+                                    on-select="vm.onElementSelect(element,field)">
+                    </catalog-select>
+                </section>
+                <section ng-if="!field['catalog'].requires">
+                    <catalog-select catalog="field.catalog"
+                                    lock="field.lock"
+                                    hint="field.hint"
+                                    required="field.required"
+                                    lazy="field.catalog.requires"
+                                    initial="vm.objectToModify[field.model]"
+                                    on-select="vm.onElementSelect(element,field)">
+                    </catalog-select>
+                </section>
+            </section>
+            <section ng-if="field['type']==='array'">
+                <md-input-container layout="column" class="md-block">
+                    <!--Field label selection depending on the parameters given-->
+                    <label ng-if="field['label']">{{field['label']}}</label>
+                    <label ng-if="!field['label']">{{field['model']}}</label>
+                    <md-chips id="{{field['model']}}"
+                              ng-model="vm.objectToModify[field.model]"
+                              ng-required="field.required"
+                              ng-disabled="field.lock"
+                              delete-button-label="Remove">
+                        <input type="text"
+                               ng-model="vm.buffer"
+                               placeholder="+"
+                               ng-pattern="field['validations'].regex">
+                    </md-chips>
+                    <div ng-messages="modifyForm[field.model].$error">
+                        <div ng-message="required">{{field.validations.errors.required}}</div>
+                        <div ng-message="pattern">{{field.validations.errors.regex}}</div>
+                    </div>
+                    <div ng-if="field.hint"
+                         class="hint">
+                        {{field.hint}}
+                    </div>
+                </md-input-container>
+            </section>
+            <section ng-if="field['type']==='catalog_array'">
+                <section ng-if="field['catalog'].requires">
+                    <section ng-if="vm.objectToModify[field['catalog'].requires]">
+                        <catalog-select required="field.required"
+                                        catalog="field.catalog"
+                                        lazy="field.catalog.requires"
+                                        multiple="true"
+                                        hint="field.hint"
+                                        initial="vm[field.model + '_initial']"
+                                        on-select="vm.onArrayElementSelect(element, field, value)">
+                        </catalog-select>
+                    </section>
+                </section>
+                <section ng-if="!field['catalog'].requires">
+                    <catalog-select catalog="field.catalog"
+                                    required="field.required"
+                                    lazy="field.catalog.requires"
+                                    multiple="true"
+                                    hint="field.hint"
+                                    initial="vm[field.model + '_initial']"
+                                    on-select="vm.onArrayElementSelect(element, field, value)">
+                    </catalog-select>
+                </section>
+            </section>
+            <section ng-if="field['type']==='object'">
+                <v-accordion id="accordionModify"
+                             class="vAccordion--default"
+                             control="accordionModify">
+                    <v-pane id="v-accordion-pane">
+                        <v-pane-header id="v-accordion-header">{{field.label}}</v-pane-header>
+                        <v-pane-content id="v-accordion-content">
+                            <catalog-object-modify element="vm.objectToModify[field.model]"
+                                                   fields="field['fields']"></catalog-object-modify>
+                        </v-pane-content>
+                    </v-pane>
+                </v-accordion>
+            </section>
+            <section ng-if="field['type']==='array_object'">
+                <v-accordion id="accordionArrayModify"
+                             class="vAccordion--default"
+                             control="accordionArrayModify">
+                    <v-pane id="v-accordion-pane">
+                        <v-pane-header id="v-accordion-header">{{field.label}}</v-pane-header>
+                        <v-pane-content id="v-accordion-content">
+                            <div layout="column"
+                                 layout-align="center stretch">
+                                <div layout="column"
+                                     layout-align="center stretch"
+                                     ng-repeat="arrayElement in vm.objectToModify[field.model] track by $index">
+                                    <v-accordion id="accordionArrayElementModify"
+                                                 class="vAccordion--default"
+                                                 control="accordionArrayElementModify">
+                                        <v-pane id="v-accordion-pane">
+                                            <v-pane-header id="v-accordion-header">{{field.label}} {{$index}}</v-pane-header>
+                                            <v-pane-content id="v-accordion-content">
+                                                <catalog-object-modify element="arrayElement"
+                                                                       fields="field['fields']"></catalog-object-modify>
+                                                <div layout="column"
+                                                     layout-align="center stretch">
+                                                    <md-button ng-click="vm.removeObjectToArray(field, $index)"
+                                                               class="md-warn md-raised"
+                                                               aria-label="Remove">
+                                                        <md-icon md-font-icon="fa fa-trash"></md-icon>
+                                                    </md-button>
+                                                </div>
+                                            </v-pane-content>
+                                        </v-pane>
+                                    </v-accordion>
+                                </div>
+                                <md-button ng-click="vm.addObjectToArray(field)"
+                                           class="md-primary md-raised"
+                                           aria-label="Add">
+                                    <md-icon md-font-icon="fa fa-plus"></md-icon>
+                                </md-button>
+                            </div>
+                        </v-pane-content>
+                    </v-pane>
+                </v-accordion>
+            </section>
+        </div>
+    </form>
+</md-content>

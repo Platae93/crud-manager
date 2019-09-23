@@ -1,0 +1,38 @@
+<div layout="column"
+     layout-align="center stretch"
+     cg-busy="{promise:vm.removeLoader, message:vm.dialog.loading, templateUrl:'app/mainApp/directives/loading.tmpl.html'}">
+    <md-toolbar layout="row"
+                layout-align="space-between center">
+        <div ng-if="vm.dialog.title" class="md-title">{{vm.dialog.title}}</div>
+        <div ng-if="!vm.dialog.title" class="md-title">Confirm deletion</div>
+        <md-button class="md-icon-button" ng-click="vm.cancel()" aria-label="cancel">
+            <md-icon md-font-icon="zmdi zmdi-close"></md-icon>
+        </md-button>
+    </md-toolbar>
+    <md-content layout="column"
+                layout-padding
+                layout-align="center stretch">
+        <div ng-if="vm.dialog.message">{{vm.dialog.message}}</div>
+        <div ng-if="!vm.dialog.message">Confirm element deletion</div>
+
+    </md-content>
+    <md-actions layout="row"
+                layout-align="space-between center">
+        <md-button ng-click="vm.cancel()"
+                   class="md-primary md-raised">
+            <div layout="row" layout-align="center center">
+                <md-icon md-font-icon="fas fa-ban"></md-icon>
+                <div ng-if="vm.dialog.cancelButton" hide-xs hide-sm>{{vm.dialog.cancelButton}}</div>
+                <div ng-if="!vm.dialog.cancelButton" hide-xs hide-sm>Cancel</div>
+            </div>
+        </md-button>
+        <md-button ng-click="vm.confirm()"
+                   class="md-warn md-raised">
+            <div layout="row" layout-align="center center">
+                <md-icon md-font-icon="fa fa-trash"></md-icon>
+                <div ng-if="vm.dialog.okButton" hide-xs hide-sm>{{vm.dialog.okButton}}</div>
+                <div ng-if="!vm.dialog.okButton" hide-xs hide-sm>Ok</div>
+            </div>
+        </md-button>
+    </md-actions>
+</div>

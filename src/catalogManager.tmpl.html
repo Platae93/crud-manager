@@ -1,0 +1,227 @@
+<div class="full-height full-width"
+     layout="column"
+     layout-align="start stretch">
+
+    <md-card layout="column"
+             layout-align="center stretch"
+             layout-padding>
+
+        <div layout="row"
+             layout-align="space-around center"
+             layout-wrap>
+            <md-button ng-if="$ctrl.actions['SEARCH'] && $ctrl.catalogElements && !$ctrl.filterApplied"
+                       ng-click="$ctrl.search()"
+                       aria-label="{{$ctrl.searchButtonText}}"
+                       class="md-primary md-raised">
+                <div layout="row" layout-align="center center">
+                    <md-icon md-font-icon="fa fa-search"></md-icon>
+                    <div ng-if="$ctrl.searchButtonText" hide-xs hide-sm>{{$ctrl.searchButtonText}}</div>
+                    <div ng-if="!$ctrl.searchButtonText" hide-xs hide-sm>Search</div>
+                </div>
+            </md-button>
+            <md-button ng-if="$ctrl.actions['POST']"
+                       ng-click="$ctrl.create()"
+                       aria-label="{{$ctrl.createButtonText}}"
+                       class="md-primary md-raised">
+                <div layout="row" layout-align="center center">
+                    <md-icon md-font-icon="fa fa-plus"></md-icon>
+                    <div ng-if="$ctrl.createButtonText" hide-xs hide-sm>{{$ctrl.createButtonText}}</div>
+                    <div ng-if="!$ctrl.createButtonText" hide-xs hide-sm>New</div>
+                </div>
+            </md-button>
+        </div>
+
+        <section ng-if="$ctrl.actions['LIST']"
+                 class="catalog-vertical-container"
+                 cg-busy="{
+                 promise:$ctrl.listLoader,
+                 message:$ctrl.loadingMessage,
+                 templateUrl:'app/mainApp/directives/loading.tmpl.html'}">
+
+            <!--No results section-->
+            <section ng-if="$ctrl.catalogElements.length==0">
+                <div layout="row"
+                     layout-align-gt-sm="start center"
+                     layout-align="center center">
+                    <span class="md-subtitle" ng-if="!$ctrl.noResults">No results</span>
+                    <span class="md-subtitle" ng-if="$ctrl.noResults">{{$ctrl.noResults}}</span>
+                </div>
+            </section>
+            <!--Results section-->
+            <section ng-if="$ctrl.catalogElements.length>0">
+                <!-- Section for list with pagination -->
+                <section ng-if="$ctrl.actions['LIST'].pagination">
+                    <div layout="row"
+                         layout-align-gt-sm="start center"
+                         layout-align="center center"
+                         ng-if="$ctrl.paginationHelper['total'] && !$ctrl.filterApplied">
+                        <span class="md-subtitle" ng-if="!$ctrl.totalText">Total: </span>
+                        <span class="md-subtitle" ng-if="$ctrl.totalText">{{$ctrl.totalText}}: </span>
+                        <span class="md-subtitle"> {{$ctrl.paginationHelper['total']}}</span>
+                    </div>
+                    <md-toolbar layout="column"
+                                layout-gt-sm="row"
+                                layout-align="center stretch"
+                                layout-align-gt-sm="space-between center"
+                                ng-if="$ctrl.filterApplied">
+                        <div layout="row"
+                             layout-align-gt-sm="start center"
+                             layout-align="center center"
+                             ng-if="$ctrl.paginationHelper['total']">
+                            <span class="md-subtitle" ng-if="!$ctrl.totalFilteredText">Total filtered: </span>
+                            <span class="md-subtitle" ng-if="$ctrl.totalFilteredText">{{$ctrl.totalFilteredText}}: </span>
+                            <span class="md-subtitle"> {{$ctrl.paginationHelper['total']}}</span>
+                        </div>
+                        <div layout="row"
+                             layout-align="center center">
+                            <span class="md-subtitle"
+                                  ng-if="$ctrl.filterApplied['label']">{{$ctrl.filterApplied['label']}}:</span>
+                            <span class="md-subtitle"
+                                  ng-if="!$ctrl.filterApplied['label']">{{$ctrl.filterApplied['model']}}:</span>
+                            <span class="md-subtitle"
+                                  ng-if="$ctrl.filterApplied['search']">{{$ctrl.filterApplied['search']}}</span>
+                        </div>
+                        <div layout="column"
+                             layout-align="center stretch">
+                            <md-button aria-label="'Remove filter'"
+                                       ng-click="$ctrl.removeFilter()"
+                                       class="md-raised">
+                                <md-icon md-font-icon="fa fa-ban"></md-icon>
+                                <md-icon md-font-icon="fa fa-filter"></md-icon>
+                                {{$ctrl.removeFilterButtonText}}
+                            </md-button>
+                        </div>
+                    </md-toolbar>
+                    <!-- Repeat per each element in the results -->
+                    <div ng-repeat="element in $ctrl.catalogElements"
+                         layout="column">
+                        <catalog-object-display element="element"
+                                                on-element-select="$ctrl.elementSelection(element)"
+                                                fields="$ctrl.actions['LIST'].fields"></catalog-object-display>
+                        <!-- Action buttons bar -->
+                        <div layout="row"
+                             layout-align="space-around center"
+                             layout-wrap>
+                            <!-- Update button -->
+                            <md-button ng-if="$ctrl.actions['PATCH']"
+                                       ng-click="$ctrl.update(element)"
+                                       aria-label="{{$ctrl.updateButtonText}}"
+                                       class="md-primary md-raised">
+                                <div layout="row" layout-align="center center">
+                                    <md-icon md-font-icon="fa fa-edit"></md-icon>
+                                    <div ng-if="$ctrl.updateButtonText" hide-xs hide-sm>{{$ctrl.updateButtonText}}</div>
+                                    <div ng-if="!$ctrl.updateButtonText" hide-xs hide-sm>Update</div>
+                                </div>
+                            </md-button>
+                            <!-- Modify button -->
+                            <md-button ng-if="$ctrl.actions['PUT']"
+                                       ng-click="$ctrl.modify(element)"
+                                       aria-label="{{$ctrl.modifyButtonText}}"
+                                       class="md-primary md-raised">
+                                <div layout="row" layout-align="center center">
+                                    <md-icon md-font-icon="fa fa-edit"></md-icon>
+                                    <div ng-if="$ctrl.modifyButtonText" hide-xs hide-sm>{{$ctrl.modifyButtonText}}</div>
+                                    <div ng-if="!$ctrl.modifyButtonText" hide-xs hide-sm>Modify</div>
+                                </div>
+                            </md-button>
+                            <!-- Delete button -->
+                            <div ng-if="$ctrl.actions['DELETE']">
+                                <md-button ng-click="$ctrl.delete(element[$ctrl.actions['DELETE'].id])"
+                                           aria-label="{{$ctrl.deleteButtonText}}"
+                                           class="md-warn md-raised">
+                                    <div layout="row" layout-align="center center">
+                                        <md-icon md-font-icon="fa fa-trash"></md-icon>
+                                        <div ng-if="$ctrl.deleteButtonText" hide-xs hide-sm>{{$ctrl.deleteButtonText}}</div>
+                                        <div ng-if="!$ctrl.deleteButtonText" hide-xs hide-sm>Delete</div>
+                                    </div>
+                                </md-button>
+                            </div>
+                        </div>
+                        <md-divider></md-divider>
+                    </div>
+                    <div layout="column"
+                         layout-align="center stretch">
+                        <!-- Pagination mode paged -->
+                        <section layout="row"
+                                 layout-align="space-between center"
+                                 ng-if="$ctrl.actions['LIST'].mode==='paged'"
+                                 cg-busy="{promise:$ctrl.pageLoader, message:$ctrl.loadingMessage, templateUrl:'app/mainApp/directives/loading.tmpl.html'}">
+                            <!-- Previous page button -->
+                            <md-button ng-disabled="!$ctrl.paginationHelper['previousPage'] && $ctrl.paginationHelper['previousPageQueries'].length===0"
+                                       ng-click="$ctrl.previousPage()"
+                                       aria-label="{{$ctrl.previousButtonText}}"
+                                       class="md-primary md-raised">
+                                <div layout="row" layout-align="center center">
+                                    <md-icon md-font-icon="fa fa-chevron-left"></md-icon>
+                                    <div ng-if="$ctrl.previousButtonText" hide-xs hide-sm>{{$ctrl.previousButtonText}}</div>
+                                    <div ng-if="!$ctrl.previousButtonText" hide-xs hide-sm>Previous</div>
+                                </div>
+                            </md-button>
+                            <!-- Next page button -->
+                            <md-button ng-disabled="!$ctrl.paginationHelper['nextPage'] && $ctrl.paginationHelper['nextPageQueries'].length==0"
+                                       ng-click="$ctrl.nextPage()"
+                                       aria-label="{{$ctrl.nextButtonText}}"
+                                       class="md-primary md-raised">
+                                <div layout="row" layout-align="center center">
+                                    <md-icon md-font-icon="fa fa-chevron-right"></md-icon>
+                                    <div ng-if="$ctrl.nextButtonText" hide-xs hide-sm>{{$ctrl.nextButtonText}}</div>
+                                    <div ng-if="!$ctrl.nextButtonText" hide-xs hide-sm>Next</div>
+                                </div>
+                            </md-button>
+                        </section>
+                        <!-- Pagination mode inifinte -->
+                        <section layout="column"
+                                 layout-align="center center"
+                                 ng-if="$ctrl.actions['LIST'].mode==='infinite'"
+                                 cg-busy="{promise:$ctrl.infiniteLoader, message:$ctrl.loadingMessage, templateUrl:'app/mainApp/directives/loading.tmpl.html'}">
+                            <!-- Load more results button -->
+                            <md-button ng-if="$ctrl.paginationHelper['nextPage'] || $ctrl.paginationHelper['nextPageQueries'].length>0"
+                                       ng-click="$ctrl.loadMore()"
+                                       aria-label="{{$ctrl.loadMoreButtonText}}"
+                                       class="md-primary md-raised">
+                                <div layout="row" layout-align="center center">
+                                    <md-icon md-font-icon="fa fa-chevron-down"></md-icon>
+                                    <div ng-if="$ctrl.loadMoreButtonText" hide-xs hide-sm>{{$ctrl.loadMoreButtonText}}</div>
+                                    <div ng-if="!$ctrl.loadMoreButtonText" hide-xs hide-sm>Load more</div>
+                                </div>
+                            </md-button>
+                        </section>
+                    </div>
+                </section>
+
+                <!-- Section for list without pagination -->
+                <section ng-if="!$ctrl.actions['LIST'].pagination">
+                    <!-- Repeat per each element in the results -->
+                    <catalog-object-display element="element"
+                                            on-element-select="$ctrl.elementSelection(element)"
+                                            fields="$ctrl.actions['LIST'].fields"></catalog-object-display>
+                    <md-toolbar layout="column"
+                                layout-gt-sm="row"
+                                layout-align="center stretch"
+                                layout-align-gt-sm="space-between center"
+                                ng-if="$ctrl.filterApplied">
+                        <div layout="row"
+                             layout-align="center center">
+                            <span class="md-subtitle"
+                                  ng-if="$ctrl.filterApplied['label']">{{$ctrl.filterApplied['label']}}:</span>
+                            <span class="md-subtitle"
+                                  ng-if="!$ctrl.filterApplied['label']">{{$ctrl.filterApplied['model']}}:</span>
+                            <span class="md-subtitle"
+                                  ng-if="$ctrl.filterApplied['search']">{{$ctrl.filterApplied['search']}}</span>
+                        </div>
+                        <div layout="column"
+                             layout-align="center stretch">
+                            <md-button aria-label="'Remove filter'"
+                                       ng-click="$ctrl.removeFilter()"
+                                       class="md-raised">
+                                <md-icon md-font-icon="fa fa-ban"></md-icon>
+                                <md-icon md-font-icon="fa fa-filter"></md-icon>
+                                {{$ctrl.removeFilterButtonText}}
+                            </md-button>
+                        </div>
+                    </md-toolbar>
+                </section>
+            </section>
+        </section>
+    </md-card>
+</div>

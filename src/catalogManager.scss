@@ -1,0 +1,33 @@
+#catalog-vertical-container {
+  //270px is the upper part size
+  //64px is the footer size
+  //64px is the header size
+  //any other number subtracted of the height is the desired offset
+  max-height: calc(100vh - 270px - 64px - 64px - 64px);
+  width: 100%;
+  max-width: 100%;
+  overflow-y: auto;
+}
+
+#full-vertical-scroller {
+  max-height: calc(100vh);
+  width: 100%;
+  max-width: 100%;
+  overflow-y: auto;
+}
+
+.create-field-hint {
+  /* Position the hint */
+  position: absolute;
+  left: 2px;
+  right: auto;
+  /* Copy styles from ng-messages */
+  font-size: 12px;
+  /* Set our own color */
+  color: grey;
+}
+
+.image-preview {
+  max-width: 100px;
+  width: 100px;
+}

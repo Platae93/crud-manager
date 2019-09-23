@@ -1,0 +1,57 @@
+<div layout="column"
+     layout-align="center stretch"
+     cg-busy="{
+                 promise:vm.searchingPromise,
+                 message:vm.dialog.loadingText,
+                 templateUrl:'app/mainApp/directives/loading.tmpl.html'}">
+    <md-toolbar layout="row"
+                layout-align="space-between center">
+        <div layout-padding ng-if="vm.dialog.title" class="md-title">{{vm.dialog.title}}</div>
+        <div layout-padding ng-if="!vm.dialog.title" class="md-title">Search elements</div>
+        <md-button class="md-icon-button"
+                   ng-click="vm.cancel()"
+                   aria-label="exit dialog">
+            <md-icon md-font-icon="zmdi zmdi-close"></md-icon>
+        </md-button>
+    </md-toolbar>
+
+    <md-content layout="column"
+                layout-padding
+                layout-align="center stretch">
+        <md-tabs md-dynamic-height="true"
+                 md-selected="vm.selectedTab">
+            <section ng-repeat="filter in vm.filters">
+                <md-tab layout="column"
+                        layout-align="center stretch"
+                        md-on-select="vm.changeTab()"
+                        label="{{filter.header}}">
+                    <section ng-if="filter.field.type!='catalog' && filter.field.type!='options'">
+                        <md-input-container flex class="md-block">
+                            <label>{{filter.label}}</label>
+                            <input aria-label="{{filter['model']}}"
+                                   type="{{filter.field.type}}"
+                                   name="{{filter.model}}"
+                                   ng-model="vm.searchAuxVar" />
+                        </md-input-container>
+                    </section>
+                    <section ng-if="filter.field.type=='catalog'"></section>
+                    <section ng-if="filter.field.type=='options'"></section>
+
+                    <md-actions layout="row"
+                                layout-align="end center">
+                        <md-button ng-click="vm.search(filter)"
+                                   aria-label="{{vm.dialog.searchButton}}"
+                                   class="md-primary md-raised">
+                            <div layout="row" layout-align="center center">
+                                <md-icon md-font-icon="fa fa-search"></md-icon>
+                                <div ng-if="vm.dialog.searchButton" hide-xs hide-sm>{{vm.dialog.searchButton}}</div>
+                                <div ng-if="!vm.dialog.searchButton" hide-xs hide-sm>Search</div>
+                            </div>
+                        </md-button>
+                    </md-actions>
+
+                </md-tab>
+            </section>
+        </md-tabs>
+    </md-content>
+</div>

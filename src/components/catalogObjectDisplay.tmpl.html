@@ -1,0 +1,171 @@
+<div layout="row"
+     layout-align="space-around center"
+     layout-padding
+     layout-wrap
+     ng-click="$ctrl.elementSelection($ctrl.element)">
+    <!-- Repeat per each field specified in the actions parameter -->
+    <div layout="column"
+         layout-align="center center"
+         ng-repeat="field in $ctrl.fields">
+        <!-- Just show this section when the field is text -->
+        <section ng-if="($ctrl.element[field.model] || field.nullOrEmpty) && field.type==='text'">
+            <!-- Label of the field -->
+            <div class="md-body-2"
+                 ng-if="field.label">
+                {{field.label}}
+            </div>
+            <div class="md-body-2"
+                 ng-if="!field.label">
+                {{field.model}}
+            </div>
+            <!--If the element is null show the message-->
+            <span ng-if="!$ctrl.element[field.model]"
+                 style="color:#AAAAAA;">
+                {{field.nullOrEmpty}}
+            </span>
+            <!-- Value of the field -->
+            <span ng-if="$ctrl.element[field.model]"
+                  class="md-body-1">{{$ctrl.element[field.model]}}</span>
+        </section>
+        <!-- Just show this section when the field is colour -->
+        <section ng-if="($ctrl.element[field.model] || field.nullOrEmpty) && field.type==='color'">
+            <!-- Label of the field -->
+            <div class="md-body-2"
+                 ng-if="field.label">
+                {{field.label}}
+            </div>
+            <div class="md-body-2"
+                 ng-if="!field.label">
+                {{field.model}}
+            </div>
+            <!--If the element is null show the message-->
+            <div ng-if="!$ctrl.element[field.model]"
+                 style="color:#AAAAAA;">
+                {{field.nullOrEmpty}}
+            </div>
+            <!-- Value of the field -->
+            <input ng-if="$ctrl.element[field.model]"
+                   ng-disabled="true"
+                   type="color"
+                   name="{{field.model}}"
+                   ng-value="{{$ctrl.element[field.model]}}">
+        </section>
+        <!-- Just show this section when the field is options -->
+        <section ng-if="field.type==='options'">
+            <!-- Label of the field -->
+            <div class="md-body-2"
+                 ng-if="field.label">
+                {{field.label}}
+            </div>
+            <div class="md-body-2"
+                 ng-if="!field.label">
+                {{field.model}}
+            </div>
+            <!-- TODO:Options management -->
+        </section>
+        <!-- Just show this section when the field is file -->
+        <section ng-if="($ctrl.element[field.model] || field.nullOrEmpty) && field.type==='file'">
+            <!--If the element is null show the message-->
+            <div ng-if="!$ctrl.element[field.model]"
+                 style="color:#AAAAAA;">
+                {{field.nullOrEmpty}}
+            </div>
+            <img ng-if="field.file.mode==='preview' && $ctrl.element[field.model]"
+                 class="image-preview"
+                 ng-src="{{$ctrl.element[field.model]}}" />
+            <md-button ng-if="field.file.mode==='download' && $ctrl.element[field.model]"
+                       aria-label="'Download File'"
+                       ng-click="$ctrl.downloadFile($ctrl.element[field.model])"
+                       class="md-primary md-raised">
+                <md-icon md-font-icon="fa fa-download"></md-icon>
+            </md-button>
+        </section>
+        <!--Just show this section when the field is an array of strings-->
+        <section ng-if="(($ctrl.element[field.model] && $ctrl.element[field.model].length>0) || field.nullOrEmpty) && field.type==='array'">
+            <!-- Label of the field -->
+            <div class="md-body-2"
+                 ng-if="field.label">
+                {{field.label}}
+            </div>
+            <div class="md-body-2"
+                 ng-if="!field.label">
+                {{field.model}}
+            </div>
+            <!--If the element is null show the message-->
+            <div ng-if="!$ctrl.element[field.model] || $ctrl.element[field.model].length==0"
+                 style="color:#AAAAAA;">
+                {{field.nullOrEmpty}}
+            </div>
+            <!-- Value of the field -->
+            <md-chips ng-if="$ctrl.element[field.model] && $ctrl.element[field.model].length>0"
+                      ng-model="$ctrl.element[field.model]"
+                      readonly="true">
+        </section>
+        <!-- Just show this section when the field is an object -->
+        <section ng-if="($ctrl.element[field.model] || field.nullOrEmpty) && field.type==='object_property'">
+            <!-- Label of the field -->
+            <div class="md-body-2"
+                 ng-if="field.label">
+                {{field.label}}
+            </div>
+            <div class="md-body-2"
+                 ng-if="!field.label">
+                {{field.model}}
+            </div>
+            <!--If the element is null show the message-->
+            <span ng-if="!$ctrl.element[field.model]"
+                 style="color:#AAAAAA;">
+                {{field.nullOrEmpty}}
+            </span>
+            <!-- Value of the field -->
+            <span ng-if="$ctrl.element[field.model]"
+                  class="md-body-1">{{$ctrl.element[field.model]}}</span>
+        </section>
+        <!--Just show this section when the field is an object-->
+        <section ng-if="($ctrl.element[field.model] || field.nullOrEmpty) && field.type==='object'">
+            <!-- Label of the field -->
+            <div class="md-body-2"
+                 ng-if="field.label">
+                {{field.label}}
+            </div>
+            <div class="md-body-2"
+                 ng-if="!field.label">
+                {{field.model}}
+            </div>
+            <!--If the element is null show the message-->
+            <div ng-if="!$ctrl.element[field.model]"
+                 style="color:#AAAAAA;">
+                {{field.nullOrEmpty}}
+            </div>
+            <!--Recursion-->
+            <catalog-object-display element="$ctrl.element[field.model]"
+                                    fields="field.fields"
+                                    ng-if="$ctrl.element[field.model]"></catalog-object-display>
+        </section>
+        <!--Just show this section when the field is an array of objects-->
+        <section ng-if="(($ctrl.element[field.model] && $ctrl.element[field.model].length>0) || field.nullOrEmpty) && field.type==='array_object'">
+            <!-- Label of the field -->
+            <div class="md-body-2"
+                 ng-if="field.label">
+                {{field.label}}
+            </div>
+            <div class="md-body-2"
+                 ng-if="!field.label">
+                {{field.model}}
+            </div>
+            <!--If the element is null or empty show the message-->
+            <div ng-if="!$ctrl.element[field.model] || $ctrl.element[field.model].length==0"
+                 style="color:#AAAAAA;">
+                {{field.nullOrEmpty}}
+            </div>
+            <div ng-if="$ctrl.element[field.model] && $ctrl.element[field.model].length>0">
+                <section ng-repeat="subElement in $ctrl.element[field.model]">
+                    <!--Recursion-->
+                    <catalog-object-display element="subElement"
+                                            fields="field.fields"></catalog-object-display>
+                    <md-divider></md-divider>
+                </section>
+            </div>
+        </section>
+    </div>
+</div>
